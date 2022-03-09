@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>SPVM - Interventions</title>
+  </head>
+  <body>
+	<script>
+		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
+		const emplacementsPDQ		= {
+			"50" : "Métro de Montréal",
+			"39" : "Arrondissement de Montréal-Nord",
+			"38" : "Le Plateau-Mont-Royal",
+			"35" : "La Petite-Italie, La Petite-Patrie, Outremont",
+			"33" : "Parc-Extension",
+			"31" : "Villeray",
+			"30" : "Saint-Michel",
+			"49" : "Ville de Montréal-Est, Pointe-aux-Trembles",
+			"48" : "Arrondissement de Mercier-Hochelaga-Maisonneuve",
+			"16" : "Île-des-Sours, Verdun",
+			"46" : "Anjou",
+			"15" : "Saint-Paul, Petite-Bourgogne, Pointe-Saint-Charles, Saint-Henri, Ville-Émard",
+			"45" : "Rivière-des-Prairies",
+			"44" : "Rosemont - La Petite-Patrie",
+			"13" : "LaSalle",
+			"12" : "Ville-Marie Ouest, Westmount",
+			"42" : "Saint-Léonard",
+			"11" : "Notre-Dame-de-Grâce",
+			"10" : "Bordeaux, Cartierville",
+			"9" : "Côte Saint-Luc, Hampstead, Montréal-Ouest",
+			"8" : "Lachine, Saint-Pierre",
+			"7" : "Saint-Laurent",
+			"27" : "Ahuntsic",
+			"26" : "Côte-des-Neiges, Mont-Royal, Outremont",
+			"5" : "Dorval, L'Île-Dorval, Pointe-Claire",
+			"4" : "Dollard-Des Ormeaux",
+			"55" : "Aéroport international Pierre-Elliott-Trudeau de Montréal",
+			"24" : "FERMÉ DÉFINITIVEMENT",
+			"3" : "L'Île-Bizard, Pierrefonds, Sainte-Geneviève, Roxboro",
+			"23" : "Hochelaga-Maisonneuve",
+			"1" : "Baie-D'Urfé, Beaconsfield, Kirkland, Sainte-Anne-de-Bellevue, Senneville",
+			"22" : "Centre-Sud",
+			"21" : "Centre-ville (Ville-Marie Est), île Notre-Dame, île Sainte-Hélène, Vieux-Montréal",
+			"20" : "Centre-ville (Ville-Marie Ouest), parc du Mont-Royal"
+		};
+		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
+		const catInterventions		= {
+			"Vols qualifiés" :
+				"Vol accompagné de violence de commerce, institution financière, personne, sac à main, véhicule blindé, véhicule, arme à feu, et tous autres types de vols qualifiés",
+			"Vol de véhicule à moteur" :
+				"vol de voiture, camion, motocyclette, motoneige tracteur avec ou sans remorque, véhicule de construction ou de ferme, tout-terrain",
+			"Infractions entrainant la mort" :
+				"Meurtre au premier degré, meurtre au deuxième degré, homicide involontaire, infanticide, négligence criminelle, et tous autres types d’infractions entraînant la mort",
+			"Méfait" :
+				"Graffiti et dommage de biens religieux, de véhicule ou dommage général et tous autres types de méfaits",
+			"Vol dans / sur véhicule à moteur" :
+				"vol du contenu d’un véhicule à moteur (voiture, camion, motocyclette, etc.) ou d’une pièce de véhicule (roue, parechoc, etc.)",
+			"Introduction" :
+				"Introduction par effraction dans un établissement public ou une résidence privée, vol d’arme à feu dans une résidence"
+			};
+		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
+		const quarts				= {
+			"3" : "nuit",
+			"2" : "soir",
+			"1" : "jour"
+		};
+		//Généré dynamiquement en Python/Jinja et utilisé par scripts/rapport.js
+		const nbInterventionsParPDQ = {
+			"50" : "1080",
+			"39" : "8102",
+			"38" : "12993",
+			"35" : "6199",
+			"33" : "2558",
+			"31" : "5180",
+			"30" : "5206",
+			"49" : "4557",
+			"48" : "8550",
+			"16" : "4415",
+			"15" : "6780",
+			"46" : "4006",
+			"45" : "3984",
+			"13" : "4390",
+			"44" : "7312",
+			"12" : "3911",
+			"11" : "4387",
+			"42" : "6835",
+			"10" : "3526",
+			"9"	 : "1746",
+			"8"  : "3902",
+			"7"  : "8140",
+			"27" : "6764",
+			"26" : "7178",
+			"5"  : "5027",
+			"4"  : "2351",
+			"55" : "62",
+			"3"  : "3182",
+			"24" : "2534",
+			"23" : "7210",
+			"1"  : "2096",
+			"22" : "5328",
+			"21" : "10696",
+			"20" : "10202"
+		};
+		
+		const dateMin               = "2015-01-01";
+		const dateMax               = "2020-11-26";
+		
+		
+		let validInterventionNbToRemove;
+		let validInterventionNbToModify;
+		let interventionToModify;
+	</script>
+
+    <div class="container">
+   		<!-- Fenêtre modale -->
+		<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="popup-title" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="popup-title">À remplir en javascript</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div id="popup-message" class="modal-body">À remplir en javascript</div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+      <header class="row bg-dark text-light align-items-center p-0">
+        <h1 class="col-10">SPVM - Interventions</h1>
+        <img class="col-2 my-2" src="./images/SPVM_badge.png" alt="Logo - Service de police de la ville de Montréal">
+        <div class="col-12 bg-secondary text-light mb-0 p-2">
+        	<div class="row m-0 p-0">
+	        	<h6 class="col-md-6 m-0 p-0">Mehdi LAHLOU - TP3</h6>
+	        	<h6 class="col-md-6 m-0 p-0 text-md-right">INF8007 - Langages de script</h6>
+	        </div>
+        </div>
+      </header>
+      <nav class="row mt-3">
+		<ul class="nav nav-tabs">
+			<li class="nav-item">
+				<a class="nav-link active" id="nav-report-tab" data-toggle="tab" href="#nav-report" role="tab" aria-controls="nav-report" aria-selected="true"><i class="bi bi-card-text"></i> Rapport</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-collection"></i> Intervention</a>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" id="nav-add-tab" data-toggle="tab" href="#nav-add" role="tab" aria-controls="nav-add" aria-selected="true"><i class="bi bi-plus-square"></i> Déclaration</a>
+					<a class="dropdown-item" id="nav-modify-tab" data-toggle="tab" href="#nav-modify" role="tab" aria-controls="nav-modify" aria-selected="true"><i class="bi bi-toggle-off"></i> Mise-à-jour</a>
+					<a class="dropdown-item" id="nav-remove-tab" data-toggle="tab" href="#nav-remove" role="tab" aria-controls="nav-remove" aria-selected="true"><i class="bi bi-dash-square"></i> Retrait</a>
+				</div>
+				<li class="nav-item">
+					<a class="nav-link" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab" aria-controls="nav-chart" aria-selected="true"><i class="bi bi-graph-up"></i> Visualisation</a>
+				</li>
+			</li>
+		</ul>
+	  </nav>
+	  <div class="tab-content" id="nav-tabContent">
+		<div class="tab-pane fade show active" id="nav-report" role="tabpanel" aria-labelledby="nav-report-tab">
+	      <div class="bg-light p-3 row">
+	        <h2><i class="bi bi-card-text"></i><span class="align-bottom"> | Rapport d'interventions</span><a class="text-dark" href="#derniere-mise-a-jour">*</a></h2>
+	          <table class="table col-lg-11 col-md-12 table-striped table-hover mx-auto">
+	            <thead class="thead-dark">
+	              <tr>
+	                <th class="text-left">Poste de quartier</th>
+	                <th>Emplacement</th>
+	                <th class="text-right"><a class="text-light" href="#derniere-mise-a-jour">*</a> Nombre d'interventions répertoriées</th>
+	              </tr>
+	            </thead>
+	            <tbody id="interventions-par-poste">
+            		<tr><td>1</td><td>Baie-D'Urfé, Beaconsfield, Kirkland, Sainte-Anne-de-Bellevue, Senneville</td><td class="text-right">2096</td></tr>
+					<tr><td>3</td><td>L'Île-Bizard, Pierrefonds, Sainte-Geneviève, Roxboro</td><td class="text-right">3182</td></tr>
+					<tr><td>4</td><td>Dollard-Des Ormeaux</td><td class="text-right">2351</td></tr>
+					<tr><td>5</td><td>Dorval, L'Île-Dorval, Pointe-Claire</td><td class="text-right">5027</td></tr>
+					<tr><td>7</td><td>Saint-Laurent</td><td class="text-right">8140</td></tr>
+					<tr><td>8</td><td>Lachine, Saint-Pierre</td><td class="text-right">3902</td></tr>
+					<tr><td>9</td><td>Côte Saint-Luc, Hampstead, Montréal-Ouest</td><td class="text-right">1746</td></tr>
+					<tr><td>10</td><td>Bordeaux, Cartierville</td><td class="text-right">3526</td></tr>
+					<tr><td>11</td><td>Notre-Dame-de-Grâce</td><td class="text-right">4387</td></tr>
+					<tr><td>12</td><td>Ville-Marie Ouest, Westmount</td><td class="text-right">3911</td></tr>
+					<tr><td>13</td><td>LaSalle</td><td class="text-right">4390</td></tr>
+					<tr><td>15</td><td>Saint-Paul, Petite-Bourgogne, Pointe-Saint-Charles, Saint-Henri, Ville-Émard</td><td class="text-right">6780</td></tr>
+					<tr><td>16</td><td>Île-des-Sours, Verdun</td><td class="text-right">4415</td></tr>
+					<tr><td>20</td><td>Centre-ville (Ville-Marie Ouest), parc du Mont-Royal</td><td class="text-right">10202</td></tr>
+					<tr><td>21</td><td>Centre-ville (Ville-Marie Est), île Notre-Dame, île Sainte-Hélène, Vieux-Montréal</td><td class="text-right">10696</td></tr>
+					<tr><td>22</td><td>Centre-Sud</td><td class="text-right">5328</td></tr>
+					<tr><td>23</td><td>Hochelaga-Maisonneuve</td><td class="text-right">7210</td></tr>
+					<tr><td>24</td><td>FERMÉ DÉFINITIVEMENT</td><td class="text-right">2534</td></tr>
+					<tr><td>26</td><td>Côte-des-Neiges, Mont-Royal, Outremont</td><td class="text-right">7178</td></tr>
+					<tr><td>27</td><td>Ahuntsic</td><td class="text-right">6764</td></tr>
+					<tr><td>30</td><td>Saint-Michel</td><td class="text-right">5206</td></tr>
+					<tr><td>31</td><td>Villeray</td><td class="text-right">5180</td></tr>
+					<tr><td>33</td><td>Parc-Extension</td><td class="text-right">2558</td></tr>
+					<tr><td>35</td><td>La Petite-Italie, La Petite-Patrie, Outremont</td><td class="text-right">6199</td></tr>
+					<tr><td>38</td><td>Le Plateau-Mont-Royal</td><td class="text-right">12993</td></tr>
+					<tr><td>39</td><td>Arrondissement de Montréal-Nord</td><td class="text-right">8102</td></tr>
+					<tr><td>42</td><td>Saint-Léonard</td><td class="text-right">6835</td></tr>
+					<tr><td>44</td><td>Rosemont - La Petite-Patrie</td><td class="text-right">7312</td></tr>
+					<tr><td>45</td><td>Rivière-des-Prairies</td><td class="text-right">3984</td></tr>
+					<tr><td>46</td><td>Anjou</td><td class="text-right">4006</td></tr>
+					<tr><td>48</td><td>Arrondissement de Mercier-Hochelaga-Maisonneuve</td><td class="text-right">8550</td></tr>
+					<tr><td>49</td><td>Ville de Montréal-Est, Pointe-aux-Trembles</td><td class="text-right">4557</td></tr>
+					<tr><td>50</td><td>Métro de Montréal</td><td class="text-right">1080</td></tr>
+					<tr><td>55</td><td>Aéroport international Pierre-Elliott-Trudeau de Montréal</td><td class="text-right">62</td></tr>
+	            </tbody>
+	          </table>
+	      </div>
+		</div>
+		<div class="tab-pane fade" id="nav-add" role="tabpanel" aria-labelledby="nav-add-tab">
+	      <div class="bg-light p-3 row">
+	        <h2><i class="bi bi-plus-square"></i><span class="align-bottom"> | Rapport de déclaration d'une intervention</span></h2>
+			<form id="form-add" class="form col-lg-11 col-md-12 mx-auto">
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<label for="add_pdq_nb"># Poste de quartier</label>
+						<select class="form-control" id="add_pdq_nb" name="add_pdq_nb">
+							<option value="1">1</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="33">33</option>
+							<option value="35">35</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="42">42</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="55">55</option>
+						</select>
+					</div>
+					<div class="form-group col-md-9">
+						<label for="add_pdq_place">Emplacement</label>
+						<input	type="text" class="form-control" id="add_pdq_place" disabled>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="add_cat_intervention">Catégorie</label>
+						<select class="form-control" id="add_cat_intervention" name="add_cat_intervention" size="6">
+		            		<option value="Vols qualifiés">Vols qualifiés</option>
+		            		<option value="Vol de véhicule à moteur">Vol de véhicule à moteur</option>
+		            		<option value="Infractions entrainant la mort">Infractions entrainant la mort</option>
+		            		<option value="Méfait">Méfait</option>
+		            		<option value="Vol dans / sur véhicule à moteur">Vol dans / sur véhicule à moteur</option>
+		            		<option value="Introduction">Introduction</option>
+						</select>
+					</div>
+					<div class="form-group col-md-6">
+						<label for="add_desc_intervention">Description</label>
+						<textarea class="form-control" id="add_desc_intervention" disabled style="height:82%; box-sizing: border-box;">Vol accompagné de violence de commerce, institution financière, personne, sac à main, véhicule blindé, véhicule, arme à feu, et tous autres types de vols qualifiés</textarea>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="add_date_incident">Date d'incident</label>
+						<input type="date" class="form-control" name="add_date_incident" id="add_date_incident">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="add_quart">Quart</label>
+						<select class="form-control form-select" id="add_quart" name="add_quart">
+			            	<option value="3" >nuit</option>
+			            	<option value="2" >soir</option>
+			            	<option value="1" selected>jour</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-12">
+						<button type="submit" id="add-submit" name="add-new-intervention" class="btn btn-warning col-lg-4 col-md-5 offset-lg-8 offset-md-7"><i class="bi bi-plus-square"></i> Soumettre le rapport</button>
+					</div>
+				</div>
+			</form>
+	      </div>
+		</div>
+		<div class="tab-pane fade" id="nav-modify" role="tabpanel" aria-labelledby="nav-modify-tab">
+	      <div class="bg-light p-3 row">
+	        <h2><i class="bi bi-toggle-off"></i><span class="align-bottom"> | Mise-à-jour d'un rapport d'intervention</span></h2>
+ 			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto">
+				<div class="form-row">
+					<div class="form-group col-md-11">
+						<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" placeholder="Inscrire le # du rapport d'intervention à mettre à jour"
+								>
+					</div>
+					<div class="form-group col-md-1">
+						<button type="submit" id="modify-search-submit" class="form-control btn btn-info"><i class="bi bi-search"></i></button>
+					</div>
+				</div>
+			</form>
+ 			<form id="form-modify-alter" class="form col-lg-11 col-md-12 mx-auto d-none">
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<label for="modify_pdq_nb"># Poste de quartier</label>
+						<select class="form-control form-select" id="modify_pdq_nb" name="modify_pdq_nb">
+	            			<option value="1">1</option>
+	            			<option value="3">3</option>
+	            			<option value="4">4</option>
+	            			<option value="5">5</option>
+	            			<option value="7">7</option>
+	            			<option value="8">8</option>
+	            			<option value="9">9</option>
+	            			<option value="10">10</option>
+	            			<option value="11">11</option>
+	            			<option value="12">12</option>
+	            			<option value="13">13</option>
+	            			<option value="15">15</option>
+	            			<option value="16">16</option>
+	            			<option value="20">20</option>
+	            			<option value="21">21</option>
+	            			<option value="22">22</option>
+	            			<option value="23">23</option>
+	            			<option value="24">24</option>
+	            			<option value="26">26</option>
+	            			<option value="27">27</option>
+	            			<option value="30">30</option>
+	            			<option value="31">31</option>
+	            			<option value="33">33</option>
+	            			<option value="35">35</option>
+	            			<option value="38">38</option>
+	            			<option value="39">39</option>
+	            			<option value="42">42</option>
+	            			<option value="44">44</option>
+	            			<option value="45">45</option>
+	            			<option value="46">46</option>
+	            			<option value="48">48</option>
+	            			<option value="49">49</option>
+	            			<option value="50">50</option>
+	            			<option value="55">55</option>
+						</select>
+					</div>
+					<div class="form-group col-md-9">
+						<label for="modify_pdq_place">Emplacement</label>
+						<input type="text" class="form-control" id="modify_pdq_place" value="Ville-Marie Ouest, Westmount" disabled>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="modify_cat_intervention">Catégorie</label>
+						<select class="form-control" id="modify_cat_intervention" name="modify_cat_intervention" size="6">
+	            			<option value="Vols qualifiés">Vols qualifiés</option>
+	            			<option value="Vol de véhicule à moteur">Vol de véhicule à moteur</option>
+	            			<option value="Infractions entrainant la mort">Infractions entrainant la mort</option>
+	            			<option value="Méfait">Méfait</option>
+	            			<option value="Vol dans / sur véhicule à moteur">Vol dans / sur véhicule à moteur</option>
+	            			<option value="Introduction">Introduction</option>
+						</select>
+					</div>
+					<div class="form-group col-md-6">
+						<label for="modify_desc_intervention">Description</label>
+						<textarea class="form-control" id="modify_desc_intervention" disabled style="height:82%; box-sizing: border-box;">Vol accompagné de violence de commerce, institution financière, personne, sac à main, véhicule blindé, véhicule, arme à feu, et tous autres types de vols qualifiés</textarea>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="modify_date_incident">Date d'incident</label>
+						<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="modify_quart">Quart</label>
+						<select class="form-control" id="modify_quart" name="modify_quart">
+			            	<option value="3" >nuit</option>
+			            	<option value="2" >soir</option>
+			            	<option value="1" >jour</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-12">
+						<button type="submit" id="modify-alter-submit" name="update-intervention" class="btn btn-warning col-lg-4 col-md-5 offset-lg-8 offset-md-7"><i class="bi bi-toggle-off"></i> Mise-à-jour du rapport</button>
+					</div>
+				</div>
+			</form>
+	      </div>
+		</div>
+		<div class="tab-pane fade" id="nav-remove" role="tabpanel" aria-labelledby="nav-remove-tab">
+	      <div class="bg-light p-3 row">
+	        <h2><i class="bi bi-dash-square"></i><span class="align-bottom"> | Retrait d'un rapport d'intervention</span></h2>
+ 			<form id="form-remove-search" class="form col-lg-11 col-md-12 mx-auto">
+				<div class="form-row">
+					<div class="form-group col-md-11">
+						<input type="text" class="form-control" id="remove_no_intervention" name="remove_no_intervention" placeholder="Inscrire le # du rapport d'intervention à supprimer"
+						>
+					</div>
+					<div class="form-group col-md-1">
+						<button type="submit" id="remove-search-submit" class="form-control btn btn-info"><i class="bi bi-search"></i></button>
+					</div>
+				</div>
+			</form>
+ 			<form id="form-remove" class="form col-lg-11 col-md-12 mx-auto d-none">
+				<div class="form-row">
+					<div class="form-group col-md-3">
+						<label for="remove_pdq_nb"># Poste de quartier</label>
+						<input type="text" class="form-control" id="remove_pdq_nb" value="" disabled>
+						<input type="hidden" name="no_intervention_to_remove" value="0">
+					</div>
+					<div class="form-group col-md-9">
+						<label for="remove_pdq_place">Emplacement</label>
+						<input type="text" class="form-control" id="remove_pdq_place" value="" disabled>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="cat_intervention">Catégorie</label>
+						<input type="text" class="form-control" id="remove_cat_intervention" value="" disabled>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="remove_date_incident">Date d'incident</label>
+						<input type="date" class="form-control" id="remove_date_incident" value="" disabled>
+					</div>
+					<div class="form-group col-md-2">
+						<label for="remove_quart">Quart</label>
+						<input type="text" class="form-control" id="remove_quart" value="" disabled>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-12">
+						<button type="submit" id="remove-submit" class="btn btn-warning col-lg-4 col-md-5 offset-lg-8 offset-md-7"><i class="bi bi-dash-square"></i> Retrait du rapport</button>
+					</div>
+				</div>
+			</form>
+	      </div>
+		</div>
+		<div class="tab-pane fade" id="nav-chart" role="tabpanel" aria-labelledby="nav-chart-tab">
+	      <div class="bg-light p-3 row">
+	        <h2><i class="bi bi-graph-up"></i><span class="align-bottom"> | Visualisation des données</span></h2>
+	      </div>
+		</div>
+  	  </div>
+      <footer class="bg-dark text-light p-3 row">
+        <h6 id="derniere-mise-a-jour"></h6>
+      </footer>
+
+    </div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="./scripts/rapport.js"></script>
+	<script src="./scripts/nav.js"></script>
+	<script src="./scripts/forms.js"></script>
+  </body>
+</html>
