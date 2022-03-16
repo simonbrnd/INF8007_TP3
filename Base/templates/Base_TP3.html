@@ -176,40 +176,14 @@
 	              </tr>
 	            </thead>
 	            <tbody id="interventions-par-poste">
-            		<tr><td>1</td><td>Baie-D'Urfé, Beaconsfield, Kirkland, Sainte-Anne-de-Bellevue, Senneville</td><td class="text-right">2096</td></tr>
-					<tr><td>3</td><td>L'Île-Bizard, Pierrefonds, Sainte-Geneviève, Roxboro</td><td class="text-right">3182</td></tr>
-					<tr><td>4</td><td>Dollard-Des Ormeaux</td><td class="text-right">2351</td></tr>
-					<tr><td>5</td><td>Dorval, L'Île-Dorval, Pointe-Claire</td><td class="text-right">5027</td></tr>
-					<tr><td>7</td><td>Saint-Laurent</td><td class="text-right">8140</td></tr>
-					<tr><td>8</td><td>Lachine, Saint-Pierre</td><td class="text-right">3902</td></tr>
-					<tr><td>9</td><td>Côte Saint-Luc, Hampstead, Montréal-Ouest</td><td class="text-right">1746</td></tr>
-					<tr><td>10</td><td>Bordeaux, Cartierville</td><td class="text-right">3526</td></tr>
-					<tr><td>11</td><td>Notre-Dame-de-Grâce</td><td class="text-right">4387</td></tr>
-					<tr><td>12</td><td>Ville-Marie Ouest, Westmount</td><td class="text-right">3911</td></tr>
-					<tr><td>13</td><td>LaSalle</td><td class="text-right">4390</td></tr>
-					<tr><td>15</td><td>Saint-Paul, Petite-Bourgogne, Pointe-Saint-Charles, Saint-Henri, Ville-Émard</td><td class="text-right">6780</td></tr>
-					<tr><td>16</td><td>Île-des-Sours, Verdun</td><td class="text-right">4415</td></tr>
-					<tr><td>20</td><td>Centre-ville (Ville-Marie Ouest), parc du Mont-Royal</td><td class="text-right">10202</td></tr>
-					<tr><td>21</td><td>Centre-ville (Ville-Marie Est), île Notre-Dame, île Sainte-Hélène, Vieux-Montréal</td><td class="text-right">10696</td></tr>
-					<tr><td>22</td><td>Centre-Sud</td><td class="text-right">5328</td></tr>
-					<tr><td>23</td><td>Hochelaga-Maisonneuve</td><td class="text-right">7210</td></tr>
-					<tr><td>24</td><td>FERMÉ DÉFINITIVEMENT</td><td class="text-right">2534</td></tr>
-					<tr><td>26</td><td>Côte-des-Neiges, Mont-Royal, Outremont</td><td class="text-right">7178</td></tr>
-					<tr><td>27</td><td>Ahuntsic</td><td class="text-right">6764</td></tr>
-					<tr><td>30</td><td>Saint-Michel</td><td class="text-right">5206</td></tr>
-					<tr><td>31</td><td>Villeray</td><td class="text-right">5180</td></tr>
-					<tr><td>33</td><td>Parc-Extension</td><td class="text-right">2558</td></tr>
-					<tr><td>35</td><td>La Petite-Italie, La Petite-Patrie, Outremont</td><td class="text-right">6199</td></tr>
-					<tr><td>38</td><td>Le Plateau-Mont-Royal</td><td class="text-right">12993</td></tr>
-					<tr><td>39</td><td>Arrondissement de Montréal-Nord</td><td class="text-right">8102</td></tr>
-					<tr><td>42</td><td>Saint-Léonard</td><td class="text-right">6835</td></tr>
-					<tr><td>44</td><td>Rosemont - La Petite-Patrie</td><td class="text-right">7312</td></tr>
-					<tr><td>45</td><td>Rivière-des-Prairies</td><td class="text-right">3984</td></tr>
-					<tr><td>46</td><td>Anjou</td><td class="text-right">4006</td></tr>
-					<tr><td>48</td><td>Arrondissement de Mercier-Hochelaga-Maisonneuve</td><td class="text-right">8550</td></tr>
-					<tr><td>49</td><td>Ville de Montréal-Est, Pointe-aux-Trembles</td><td class="text-right">4557</td></tr>
-					<tr><td>50</td><td>Métro de Montréal</td><td class="text-right">1080</td></tr>
-					<tr><td>55</td><td>Aéroport international Pierre-Elliott-Trudeau de Montréal</td><td class="text-right">62</td></tr>
+					{% for row in interventionsparPoste.itertuples() %}
+            		<tr>
+						<td>{{ row.Index }}</td>
+						<td>{{ row.EMPLACEMENT}}</td>
+						<td class="text-right">{{ row.NB_INTERVENTION }}</td>
+					</tr>
+					{% endfor %}
+					
 	            </tbody>
 	          </table>
 	      </div>
