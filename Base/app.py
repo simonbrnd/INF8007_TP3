@@ -23,13 +23,31 @@ def base_tp3():
     
     nbInterventionsDf = interventions.drop(columns=["DATE_INCIDENT", "CATÉGORIE", "QUART_TRAVAIL"]).groupby("PDQ").count()
     nbInterventionsDf = nbInterventionsDf.rename(columns={'ID_INTERVENTION':'NB_INTERVENTION'})
-    #catDict={}
-    #for row in categorie.itertuples()
-    #print(json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False))
+
     interventionsParPoste = pdq.set_index('PDQ').join(nbInterventionsDf)
 
 
-    return render_template('Base_TP3.html', interventionsparPoste=interventionsParPoste, nbInterventionsParPDQ=nbInterventionsDf.to_dict(),DateMin=Date_incident.min(),DateMax=Date_incident.max().strftime("%Y-%m-%d"),PDQ=list(nbInterventionsDf.index),cat=categorie,Quart=qdt,catIntervention=json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False),emplacementsPDQ=json.dumps(pdq.set_index("PDQ").squeeze().to_dict(),ensure_ascii=False))
+    return render_template('Base_TP3.html', 
+                            interventionsparPoste=interventionsParPoste, 
+                            nbInterventionsParPDQ=nbInterventionsDf.to_dict(),
+                            DateMin=Date_incident.min(),
+                            DateMax=Date_incident.max().strftime("%Y-%m-%d"),
+                            PDQ=list(nbInterventionsDf.index),
+                            cat=categorie,
+                            Quart=qdt,
+                            catIntervention=json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False),emplacementsPDQ=json.dumps(pdq.set_index("PDQ").squeeze().to_dict(),ensure_ascii=False))
+
+@app.route('/add',methods=['POST']) 
+def add() :
+    if request.method == 'POST' and len(request.form) > 0 :
+        interventions_read = open(file=INTERVENTIONS_FILE_PATH, mode='r', encoding='UTF-8')
+        last_line = interventions_read.readlines()[-1]
+        new_id = int(last_line.split("\t")[0]) + 1
+        interventions_write = open(file=INTERVENTIONS_FILE_PATH, mode='a', encoding='UTF-8')
+        interventions_write.write(f"{new_id}\t{request.form['add_date_incident']}\t{request.form['add_cat_intervention']}\t{request.form['add_pdq_nb']}\t{request.form['add_quart']}\n")
+        interventions_write.close()
+
+    return redirect("/#nav-add")
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5555, debug=False)
