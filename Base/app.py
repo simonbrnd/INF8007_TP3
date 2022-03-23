@@ -29,7 +29,7 @@ def base_tp3():
     interventionsParPoste = pdq.set_index('PDQ').join(nbInterventionsDf)
 
 
-    return render_template('Base_TP3.html', interventionsparPoste=interventionsParPoste, nbInterventionsParPDQ=nbInterventionsDf.to_dict(),DateMin=Date_incident.min(),DateMax=Date_incident.max().strftime("%Y-%m-%d"),PDQ=list(nbInterventionsDf.index),cat=categorie,Quart=qdt,catIntervention=json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False))
+    return render_template('Base_TP3.html', interventionsparPoste=interventionsParPoste, nbInterventionsParPDQ=nbInterventionsDf.to_dict(),DateMin=Date_incident.min(),DateMax=Date_incident.max().strftime("%Y-%m-%d"),PDQ=list(nbInterventionsDf.index),cat=categorie,Quart=qdt,catIntervention=json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False),emplacementsPDQ=json.dumps(pdq.set_index("PDQ").squeeze().to_dict(),ensure_ascii=False))
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5555, debug=False)

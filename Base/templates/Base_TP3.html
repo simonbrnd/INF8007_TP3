@@ -13,7 +13,8 @@
   <body>
 	<script>
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
-		const emplacementsPDQ		= {
+		const emplacementsPDQ		= JSON.parse("{{emplacementsPDQ}}".replace(/&#34;/g,'"').replace(/&#39;/g,'\''));
+			/*
 			"50" : "Métro de Montréal",
 			"39" : "Arrondissement de Montréal-Nord",
 			"38" : "Le Plateau-Mont-Royal",
@@ -48,9 +49,9 @@
 			"22" : "Centre-Sud",
 			"21" : "Centre-ville (Ville-Marie Est), île Notre-Dame, île Sainte-Hélène, Vieux-Montréal",
 			"20" : "Centre-ville (Ville-Marie Ouest), parc du Mont-Royal"
-		};
+		};*/
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
-		const catInterventions		= JSON.parse("{{catIntervention}}".replace(/&#34;/g,'"'));
+		const catInterventions		= JSON.parse("{{catIntervention}}".replace(/&#34;/g,'"').replace(/&#39;/g,'\''));
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
 		const quarts				= {
 			"3" : "nuit",
