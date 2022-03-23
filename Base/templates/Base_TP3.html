@@ -50,8 +50,9 @@
 			"20" : "Centre-ville (Ville-Marie Ouest), parc du Mont-Royal"
 		};
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
-		const catInterventions		= {
-			"Vols qualifiés" :
+		const catInterventions		= "{{catIntervention}}";
+		console.log(catInterventions);
+			/*"Vols qualifiés" :
 				"Vol accompagné de violence de commerce, institution financière, personne, sac à main, véhicule blindé, véhicule, arme à feu, et tous autres types de vols qualifiés",
 			"Vol de véhicule à moteur" :
 				"vol de voiture, camion, motocyclette, motoneige tracteur avec ou sans remorque, véhicule de construction ou de ferme, tout-terrain",
@@ -63,7 +64,7 @@
 				"vol du contenu d’un véhicule à moteur (voiture, camion, motocyclette, etc.) ou d’une pièce de véhicule (roue, parechoc, etc.)",
 			"Introduction" :
 				"Introduction par effraction dans un établissement public ou une résidence privée, vol d’arme à feu dans une résidence"
-			};
+			};*/
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/forms.js
 		const quarts				= {
 			"3" : "nuit",
@@ -71,52 +72,16 @@
 			"1" : "jour"
 		};
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/rapport.js
-		const nbInterventionsParPDQ = {
-			"50" : "1080",
-			"39" : "8102",
-			"38" : "12993",
-			"35" : "6199",
-			"33" : "2558",
-			"31" : "5180",
-			"30" : "5206",
-			"49" : "4557",
-			"48" : "8550",
-			"16" : "4415",
-			"15" : "6780",
-			"46" : "4006",
-			"45" : "3984",
-			"13" : "4390",
-			"44" : "7312",
-			"12" : "3911",
-			"11" : "4387",
-			"42" : "6835",
-			"10" : "3526",
-			"9"	 : "1746",
-			"8"  : "3902",
-			"7"  : "8140",
-			"27" : "6764",
-			"26" : "7178",
-			"5"  : "5027",
-			"4"  : "2351",
-			"55" : "62",
-			"3"  : "3182",
-			"24" : "2534",
-			"23" : "7210",
-			"1"  : "2096",
-			"22" : "5328",
-			"21" : "10696",
-			"20" : "10202"
-		};
+		const nbInterventionsParPDQ = "{nbInterventionsParPDQ}";
 		
-		const dateMin               = "2015-01-01";
-		const dateMax               = "2020-11-26";
+		const dateMin               = "{{DateMin.year}}"//"2015-01-01";
+		const dateMax               =  "{{ DateMax }}"//"2020-11-26";
 		
 		
 		let validInterventionNbToRemove;
 		let validInterventionNbToModify;
 		let interventionToModify;
 	</script>
-
     <div class="container">
    		<!-- Fenêtre modale -->
 		<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="popup-title" aria-hidden="true">
@@ -137,7 +102,7 @@
 		</div>
       <header class="row bg-dark text-light align-items-center p-0">
         <h1 class="col-10">SPVM - Interventions</h1>
-        <img class="col-2 my-2" src="./images/SPVM_badge.png" alt="Logo - Service de police de la ville de Montréal">
+        <img class="col-2 my-2" src="./static/images/SPVM_badge.png" alt="Logo - Service de police de la ville de Montréal">
         <div class="col-12 bg-secondary text-light mb-0 p-2">
         	<div class="row m-0 p-0">
 	        	<h6 class="col-md-6 m-0 p-0">Mehdi LAHLOU - TP3</h6>
@@ -196,40 +161,9 @@
 					<div class="form-group col-md-3">
 						<label for="add_pdq_nb"># Poste de quartier</label>
 						<select class="form-control" id="add_pdq_nb" name="add_pdq_nb">
-							<option value="1">1</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-							<option value="13">13</option>
-							<option value="15">15</option>
-							<option value="16">16</option>
-							<option value="20">20</option>
-							<option value="21">21</option>
-							<option value="22">22</option>
-							<option value="23">23</option>
-							<option value="24">24</option>
-							<option value="26">26</option>
-							<option value="27">27</option>
-							<option value="30">30</option>
-							<option value="31">31</option>
-							<option value="33">33</option>
-							<option value="35">35</option>
-							<option value="38">38</option>
-							<option value="39">39</option>
-							<option value="42">42</option>
-							<option value="44">44</option>
-							<option value="45">45</option>
-							<option value="46">46</option>
-							<option value="48">48</option>
-							<option value="49">49</option>
-							<option value="50">50</option>
-							<option value="55">55</option>
+							{% for value in PDQ %}
+							<option value="{{value}}">{{value}}</option>
+							{% endfor %}
 						</select>
 					</div>
 					<div class="form-group col-md-9">
@@ -241,12 +175,9 @@
 					<div class="form-group col-md-6">
 						<label for="add_cat_intervention">Catégorie</label>
 						<select class="form-control" id="add_cat_intervention" name="add_cat_intervention" size="6">
-		            		<option value="Vols qualifiés">Vols qualifiés</option>
-		            		<option value="Vol de véhicule à moteur">Vol de véhicule à moteur</option>
-		            		<option value="Infractions entrainant la mort">Infractions entrainant la mort</option>
-		            		<option value="Méfait">Méfait</option>
-		            		<option value="Vol dans / sur véhicule à moteur">Vol dans / sur véhicule à moteur</option>
-		            		<option value="Introduction">Introduction</option>
+							{% for row in cat.itertuples() %}
+		            		<option value="{{row.LIBELLÉ}}">{{row.LIBELLÉ}}</option>
+		            		{% endfor %}
 						</select>
 					</div>
 					<div class="form-group col-md-6">
@@ -262,9 +193,9 @@
 					<div class="form-group col-md-6">
 						<label for="add_quart">Quart</label>
 						<select class="form-control form-select" id="add_quart" name="add_quart">
-			            	<option value="3" >nuit</option>
-			            	<option value="2" >soir</option>
-			            	<option value="1" selected>jour</option>
+							{% for row in Quart.itertuples() %}
+			            	<option value="{{row.Index}}" >{{row.LIBELLÉ}}</option>
+			            	{% endfor %}
 						</select>
 					</div>
 				</div>
@@ -438,8 +369,8 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="./scripts/rapport.js"></script>
-	<script src="./scripts/nav.js"></script>
-	<script src="./scripts/forms.js"></script>
+    <script src="./static/scripts/rapport.js"></script>
+	<script src="./static/scripts/nav.js"></script>
+	<script src="./static/scripts/forms.js"></script>
   </body>
 </html>

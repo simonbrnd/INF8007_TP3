@@ -173,5 +173,5 @@ const init = () => {
 	}
 }
 
-
+console.log(catInterventions);
 window.addEventListener("load", init);
