@@ -1,3 +1,5 @@
+
+
 const forms = {
 	"form-add" : {
 		elements : {
@@ -61,8 +63,7 @@ const forms = {
 		submit : "remove-submit"
 	},
 
-}	
-
+}
 const linkedForms = [
 	{
 		prerequisite_form : "form-modify-search",
@@ -173,5 +174,4 @@ const init = () => {
 	}
 }
 
-console.log(catInterventions);
 window.addEventListener("load", init);

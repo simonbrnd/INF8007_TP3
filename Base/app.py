@@ -1,6 +1,7 @@
 import pandas as pd
 from flask import Flask, render_template, request, redirect
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 
@@ -24,11 +25,11 @@ def base_tp3():
     nbInterventionsDf = nbInterventionsDf.rename(columns={'ID_INTERVENTION':'NB_INTERVENTION'})
     #catDict={}
     #for row in categorie.itertuples()
-    #print(categorie.set_index("LIBELLÉ").squeeze().to_dict())
+    #print(json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False))
     interventionsParPoste = pdq.set_index('PDQ').join(nbInterventionsDf)
 
 
-    return render_template('Base_TP3.html', interventionsparPoste=interventionsParPoste, nbInterventionsParPDQ=nbInterventionsDf.to_dict(),DateMin=Date_incident.min(),DateMax=Date_incident.max().strftime("%Y-%m-%d"),PDQ=list(nbInterventionsDf.index),cat=categorie,Quart=,catIntervention=categorie.set_index("LIBELLÉ").squeeze().to_dict())
+    return render_template('Base_TP3.html', interventionsparPoste=interventionsParPoste, nbInterventionsParPDQ=nbInterventionsDf.to_dict(),DateMin=Date_incident.min(),DateMax=Date_incident.max().strftime("%Y-%m-%d"),PDQ=list(nbInterventionsDf.index),cat=categorie,Quart=qdt,catIntervention=json.dumps(categorie.set_index("LIBELLÉ").squeeze().to_dict(),ensure_ascii=False))
 
 if __name__ == "__main__":
     app.run(host='localhost', port=5555, debug=False)
