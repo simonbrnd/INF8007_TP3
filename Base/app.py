@@ -62,10 +62,12 @@ def index():
                             emplacementsPDQ=emplacementsPDQ,
                             lastId=lastId,
                             invalid = None,
-                            validInterventionNbToModify=0)
+                            val=json.dumps(False),
+                            modifyNoIntervention=json.dumps(None),
+                            modifyInfos=None)
 
 
-@app.route("/add", methods=['POST']) 
+@app.route("/add", methods=['POST', 'GET']) 
 def add() :
     # Méthode pour ajouter un rapport, compléter les données et afficher une pop-up
     if request.method == 'POST' and len(request.form) > 0 :
@@ -80,7 +82,7 @@ def add() :
 
         (interventionsParPoste, nbInterventionsParPDQ, DateMin, DateMax, PDQ, categorie, qdt, catIntervention, emplacementsPDQ, lastId) = compute_vars_for_rending_template()
 
-        render_template("add.html",
+        return render_template("add.html",
                         interventionsparPoste=interventionsParPoste, 
                         nbInterventionsParPDQ=nbInterventionsParPDQ,
                         DateMin=DateMin,
@@ -92,9 +94,11 @@ def add() :
                         emplacementsPDQ=emplacementsPDQ,
                         lastId=lastId,
                         invalid=None,
-                        validInterventionNbToModify=0)
+                        validModify=json.dumps(False),
+                        modifyNoIntervention=None,
+                        modifyInfos=None)
 
-    return redirect("#nav-add")
+    return redirect("/#nav-add")
 
 
 
@@ -103,38 +107,40 @@ def modify() :
     if request.method == 'POST' and len(request.form) > 0 :
         id_to_modify = request.form['modify_no_intervention']
         interventions_pd = pd.read_csv(INTERVENTIONS_FILE_PATH, sep="\t")
-        validInterventionNbToModify = valid_intervention_number(id_to_modify, interventions_pd)
+        validModify = valid_intervention_number(id_to_modify, interventions_pd)
 
+        print("Valid number? :", validModify)
 
-        print("Valid number? :", validInterventionNbToModify)
-
-        if validInterventionNbToModify :
+        if validModify :
             file = "Base_TP3.html"
-            validInterventionNbToModify=1
+            modifyNoIntervention = id_to_modify
+            interventions_pd = interventions_pd.set_index("ID_INTERVENTION")
+            line = interventions_pd.loc[id_to_modify]
+            print("Id to modify :", id_to_modify)
+            print(type(id_to_modify))
 
         else :
             file = "error_modify.html" 
-            validInterventionNbToModify=0
-
+            modifyNoIntervention = None
+            line = None
 
         (interventionsParPoste, nbInterventionsParPDQ, DateMin, DateMax, PDQ, categorie, qdt, catIntervention, emplacementsPDQ, lastId) = compute_vars_for_rending_template()
 
-        # ATTENTION : la variable validInterventionNbToModify ne marche pas et est mal retranscrite en JS, il faut trouver un moyen de bien retranscrire le true/false
-        # pour empecher l'affichage de la page mise-à-jour en entier quand on arrive dessus et l'afficher uniquement quand on a un numéro valide
-        render_template("error_modify.html",
-                        interventionsparPoste=interventionsParPoste, 
-                        nbInterventionsParPDQ=nbInterventionsParPDQ,
-                        DateMin=DateMin,
-                        DateMax=DateMax,
-                        PDQ=PDQ,
-                        cat=categorie,
-                        Quart=qdt,
-                        catIntervention=catIntervention,
-                        emplacementsPDQ=emplacementsPDQ,
-                        lastId=lastId,
-                        invalid=id_to_modify,
-                        validInterventionNbToModify=validInterventionNbToModify)
-
+        return render_template(file,
+                                interventionsparPoste=interventionsParPoste, 
+                                nbInterventionsParPDQ=nbInterventionsParPDQ,
+                                DateMin=DateMin,
+                                DateMax=DateMax,
+                                PDQ=PDQ,
+                                cat=categorie,
+                                Quart=qdt,
+                                catIntervention=catIntervention,
+                                emplacementsPDQ=emplacementsPDQ,
+                                lastId=lastId,
+                                invalid=id_to_modify,
+                                validModify=json.dumps(validModify),
+                                modifyNoIntervention=json.dumps(modifyNoIntervention),
+                                modifyInfos=line)
 
 
 if __name__ == "__main__":

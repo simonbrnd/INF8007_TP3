@@ -31,9 +31,8 @@
 		const dateMin               = "{{ DateMin.year }}";
 		const dateMax               =  "{{ DateMax }}";
 		
-		
 		let validInterventionNbToRemove;
-		let validInterventionNbToModify = "{{validInterventionNbToModify}}";
+		let validInterventionNbToModify = "{{ validModify|safe }}" ;
 		let interventionToModify;
 	</script>
     <div class="container">
@@ -167,8 +166,13 @@
  			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto" action="/modify" method="POST">
 				<div class="form-row">
 					<div class="form-group col-md-11">
-						<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" placeholder="Inscrire le # du rapport d'intervention à mettre à jour"
-								>
+						{% if validModify %}
+							<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" 
+							placeholder="Inscrire le # du rapport d'intervention à mettre à jour" value="{{modifyNoIntervention|safe}}">
+						{% else %}
+							<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" 
+							placeholder="Inscrire le # du rapport d'intervention à mettre à jour">
+						{% endif %}
 					</div>
 					<div class="form-group col-md-1">
 						<button type="submit" id="modify-search-submit" class="form-control btn btn-info"><i class="bi bi-search"></i></button>
@@ -180,40 +184,13 @@
 					<div class="form-group col-md-3">
 						<label for="modify_pdq_nb"># Poste de quartier</label>
 						<select class="form-control form-select" id="modify_pdq_nb" name="modify_pdq_nb">
-	            			<option value="1">1</option>
-	            			<option value="3">3</option>
-	            			<option value="4">4</option>
-	            			<option value="5">5</option>
-	            			<option value="7">7</option>
-	            			<option value="8">8</option>
-	            			<option value="9">9</option>
-	            			<option value="10">10</option>
-	            			<option value="11">11</option>
-	            			<option value="12">12</option>
-	            			<option value="13">13</option>
-	            			<option value="15">15</option>
-	            			<option value="16">16</option>
-	            			<option value="20">20</option>
-	            			<option value="21">21</option>
-	            			<option value="22">22</option>
-	            			<option value="23">23</option>
-	            			<option value="24">24</option>
-	            			<option value="26">26</option>
-	            			<option value="27">27</option>
-	            			<option value="30">30</option>
-	            			<option value="31">31</option>
-	            			<option value="33">33</option>
-	            			<option value="35">35</option>
-	            			<option value="38">38</option>
-	            			<option value="39">39</option>
-	            			<option value="42">42</option>
-	            			<option value="44">44</option>
-	            			<option value="45">45</option>
-	            			<option value="46">46</option>
-	            			<option value="48">48</option>
-	            			<option value="49">49</option>
-	            			<option value="50">50</option>
-	            			<option value="55">55</option>
+							{% for value in PDQ %}
+								{% if value == modifyInfos.PDQ %}
+									<option value="{{value}}" selected disabled>{{value}}</option>
+								{% else %} 
+									<option value="{{value}}">{{value}}</option>
+								{% endif %}
+							{% endfor %}
 						</select>
 					</div>
 					<div class="form-group col-md-9">
@@ -225,12 +202,13 @@
 					<div class="form-group col-md-6">
 						<label for="modify_cat_intervention">Catégorie</label>
 						<select class="form-control" id="modify_cat_intervention" name="modify_cat_intervention" size="6">
-	            			<option value="Vols qualifiés">Vols qualifiés</option>
-	            			<option value="Vol de véhicule à moteur">Vol de véhicule à moteur</option>
-	            			<option value="Infractions entrainant la mort">Infractions entrainant la mort</option>
-	            			<option value="Méfait">Méfait</option>
-	            			<option value="Vol dans / sur véhicule à moteur">Vol dans / sur véhicule à moteur</option>
-	            			<option value="Introduction">Introduction</option>
+	            			{% for row in cat.itertuples() %}
+								{% if row.LIBELLÉ == modifyInfos.CATÉGORIE %}
+									<option value="{{row.LIBELLÉ}}" selected disabled>{{row.LIBELLÉ}}</option>
+								{% else %} 
+									<option value="{{row.LIBELLÉ}}">{{row.LIBELLÉ}}</option>
+								{% endif %}
+							{% endfor %}
 						</select>
 					</div>
 					<div class="form-group col-md-6">
@@ -241,14 +219,23 @@
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="modify_date_incident">Date d'incident</label>
-						<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident">
+						{% if validModify %}
+							<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident" value="{{modifyInfos.DATE_INCIDENT}}">
+						{% else %}
+							<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident">
+						{% endif %}
+						
 					</div>
 					<div class="form-group col-md-6">
 						<label for="modify_quart">Quart</label>
 						<select class="form-control" id="modify_quart" name="modify_quart">
-			            	<option value="3" >nuit</option>
-			            	<option value="2" >soir</option>
-			            	<option value="1" >jour</option>
+						{% for row in Quart.itertuples() %}
+							{% if row.LIBELLÉ == modifyInfos.QUART_TRAVAIL %}
+								<option value="{{row.ID}}" selected disabled>{{row.LIBELLÉ}}</option>
+							{% else %} 
+								<option value="{{row.ID}}">{{row.LIBELLÉ}}</option>
+							{% endif %}
+						{% endfor %}	
 						</select>
 					</div>
 				</div>
