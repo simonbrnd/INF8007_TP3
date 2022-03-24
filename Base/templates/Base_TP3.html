@@ -28,12 +28,12 @@
 		//Généré dynamiquement en Python/Jinja et utilisé par scripts/rapport.js
 		const nbInterventionsParPDQ = "{nbInterventionsParPDQ}";
 		
-		const dateMin               = "{{DateMin.year}}"//"2015-01-01";
-		const dateMax               =  "{{ DateMax }}"//"2020-11-26";
+		const dateMin               = "{{ DateMin.year }}";
+		const dateMax               =  "{{ DateMax }}";
 		
 		
 		let validInterventionNbToRemove;
-		let validInterventionNbToModify;
+		let validInterventionNbToModify = "{{validInterventionNbToModify}}";
 		let interventionToModify;
 	</script>
     <div class="container">
@@ -164,7 +164,7 @@
 		<div class="tab-pane fade" id="nav-modify" role="tabpanel" aria-labelledby="nav-modify-tab">
 	      <div class="bg-light p-3 row">
 	        <h2><i class="bi bi-toggle-off"></i><span class="align-bottom"> | Mise-à-jour d'un rapport d'intervention</span></h2>
- 			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto">
+ 			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto" action="/modify" method="POST">
 				<div class="form-row">
 					<div class="form-group col-md-11">
 						<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" placeholder="Inscrire le # du rapport d'intervention à mettre à jour"
@@ -263,7 +263,7 @@
 		<div class="tab-pane fade" id="nav-remove" role="tabpanel" aria-labelledby="nav-remove-tab">
 	      <div class="bg-light p-3 row">
 	        <h2><i class="bi bi-dash-square"></i><span class="align-bottom"> | Retrait d'un rapport d'intervention</span></h2>
- 			<form id="form-remove-search" class="form col-lg-11 col-md-12 mx-auto">
+ 			<form id="form-remove-search" class="form col-lg-11 col-md-12 mx-auto" action="/remove" method="POST">
 				<div class="form-row">
 					<div class="form-group col-md-11">
 						<input type="text" class="form-control" id="remove_no_intervention" name="remove_no_intervention" placeholder="Inscrire le # du rapport d'intervention à supprimer"
@@ -326,5 +326,10 @@
     <script src="./static/scripts/rapport.js"></script>
 	<script src="./static/scripts/nav.js"></script>
 	<script src="./static/scripts/forms.js"></script>
+
+	{% block add %}{% endblock %}
+	
+	{% block modify_invalid %}{% endblock %}
+
   </body>
 </html>

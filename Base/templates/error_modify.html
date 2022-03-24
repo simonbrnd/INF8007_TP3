@@ -1,0 +1,19 @@
+{% extends 'Base_TP3.html' %}
+
+{% block add %}{% endblock %}
+
+
+{% block modify_invalid %}
+<script>
+window.addEventListener("load",  () => {
+    document.getElementById("popup-title").textContent = "Erreur";
+    document.getElementById("popup-message").textContent =  "L'intervention #"+ "{{ invalid }}" + " n'existe pas";
+
+    $("#popup").modal();
+
+    $("#popup").on("hidden.bs.modal", (e) => {
+        window.location.search = "";
+    })
+})
+</script>
+{% endblock %}

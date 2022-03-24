@@ -1,0 +1,22 @@
+{% extends 'Base_TP3.html' %}
+
+{% block add %}
+<script>
+console.log("Into the script")
+window.addEventListener("load",  () => {
+    document.getElementById("popup-title").textContent = "Déclaration";
+    document.getElementById("popup-message").textContent =  "L'intervention #" + "{{ lastId }}" + " a été ajoutée avec succès";
+
+    console.log("Pop-up window appears");
+
+    $("#popup").modal();
+
+    $("#popup").on("hidden.bs.modal", (e) => {
+        window.location.search = "";
+    })
+})
+</script>
+{% endblock %}
+
+
+{% block modify_invalid %}{% endblock %}
