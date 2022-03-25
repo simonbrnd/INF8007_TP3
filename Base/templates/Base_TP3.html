@@ -32,7 +32,7 @@
 		const dateMax               =  "{{ DateMax }}";
 		
 		let validInterventionNbToRemove;
-		let validInterventionNbToModify = "{{ validModify|safe }}" ;
+		let validInterventionNbToModify;
 		let interventionToModify;
 	</script>
     <div class="container">
@@ -58,7 +58,7 @@
         <img class="col-2 my-2" src="./static/images/SPVM_badge.png" alt="Logo - Service de police de la ville de Montréal">
         <div class="col-12 bg-secondary text-light mb-0 p-2">
         	<div class="row m-0 p-0">
-	        	<h6 class="col-md-6 m-0 p-0">Mehdi LAHLOU - TP3</h6>
+	        	<h6 class="col-md-6 m-0 p-0">Clara SERRUAU et Simon BERNARD - TP3</h6>
 	        	<h6 class="col-md-6 m-0 p-0 text-md-right">INF8007 - Langages de script</h6>
 	        </div>
         </div>
@@ -115,8 +115,8 @@
 					<div class="form-group col-md-3">
 						<label for="add_pdq_nb"># Poste de quartier</label>
 						<select class="form-control" id="add_pdq_nb" name="add_pdq_nb">
-							{% for value in PDQ %}
-							<option value="{{value}}">{{value}}</option>
+							{% for row in pdq.itertuples() %}
+							<option value="{{row.PDQ}}">{{row.PDQ}}</option>
 							{% endfor %}
 						</select>
 					</div>
@@ -169,12 +169,12 @@
 		<div class="tab-pane fade" id="nav-modify" role="tabpanel" aria-labelledby="nav-modify-tab">
 	      <div class="bg-light p-3 row">
 	        <h2><i class="bi bi-toggle-off"></i><span class="align-bottom"> | Mise-à-jour d'un rapport d'intervention</span></h2>
- 			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto" action="/modify" method="POST">
+ 			<form id="form-modify-search" class="form col-lg-11 col-md-12 mx-auto">
 				<div class="form-row">
 					<div class="form-group col-md-11">
-						{% if validModify %}
+						{% if mode == 'valid_modify' %}
 							<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" 
-							placeholder="Inscrire le # du rapport d'intervention à mettre à jour" value="{{modifyNoIntervention|safe}}">
+							placeholder="Inscrire le # du rapport d'intervention à mettre à jour" value="{{ templateValue.ID_INTERVENTION }}">
 						{% else %}
 							<input type="text" class="form-control" id="modify_no_intervention" name="modify_no_intervention" 
 							placeholder="Inscrire le # du rapport d'intervention à mettre à jour">
@@ -190,18 +190,18 @@
 					<div class="form-group col-md-3">
 						<label for="modify_pdq_nb"># Poste de quartier</label>
 						<select class="form-control form-select" id="modify_pdq_nb" name="modify_pdq_nb">
-							{% for value in PDQ %}
-								{% if value == modifyInfos.PDQ %}
-									<option value="{{value}}" selected disabled>{{value}}</option>
+							{% for row in pdq.itertuples() %}
+								{% if row.PDQ == templateValue.PDQ %}
+									<option value="{{row.PDQ}}" selected disabled>{{row.PDQ}}</option>
 								{% else %} 
-									<option value="{{value}}">{{value}}</option>
+									<option value="{{row.PDQ}}">{{row.PDQ}}</option>
 								{% endif %}
 							{% endfor %}
 						</select>
 					</div>
 					<div class="form-group col-md-9">
 						<label for="modify_pdq_place">Emplacement</label>
-						<input type="text" class="form-control" id="modify_pdq_place" value="Ville-Marie Ouest, Westmount" disabled>
+						<input type="text" class="form-control" id="modify_pdq_place" value="{{templateValue.EMPLACEMENT}}" disabled>
 					</div>
 				</div>
 				<div class="form-row">
@@ -209,7 +209,7 @@
 						<label for="modify_cat_intervention">Catégorie</label>
 						<select class="form-control" id="modify_cat_intervention" name="modify_cat_intervention" size="6">
 	            			{% for row in cat.itertuples() %}
-								{% if row.LIBELLÉ == modifyInfos.CATÉGORIE %}
+								{% if row.LIBELLÉ == templateValue.CATÉGORIE %}
 									<option value="{{row.LIBELLÉ}}" selected disabled>{{row.LIBELLÉ}}</option>
 								{% else %} 
 									<option value="{{row.LIBELLÉ}}">{{row.LIBELLÉ}}</option>
@@ -219,14 +219,14 @@
 					</div>
 					<div class="form-group col-md-6">
 						<label for="modify_desc_intervention">Description</label>
-						<textarea class="form-control" id="modify_desc_intervention" disabled style="height:82%; box-sizing: border-box;">Vol accompagné de violence de commerce, institution financière, personne, sac à main, véhicule blindé, véhicule, arme à feu, et tous autres types de vols qualifiés</textarea>
+						<textarea class="form-control" id="modify_desc_intervention" disabled style="height:82%; box-sizing: border-box;" value="{{templateValue.DESCRIPTION}}">{{templateValue.DESCRIPTION}}</textarea>
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="modify_date_incident">Date d'incident</label>
-						{% if validModify %}
-							<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident" value="{{modifyInfos.DATE_INCIDENT}}">
+						{% if mode == 'valid_modify' %}
+							<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident" value="{{templateValue.DATE_INCIDENT}}">
 						{% else %}
 							<input type="date" class="form-control" id="modify_date_incident" name="modify_date_incident">
 						{% endif %}
@@ -236,7 +236,7 @@
 						<label for="modify_quart">Quart</label>
 						<select class="form-control" id="modify_quart" name="modify_quart">
 						{% for row in Quart.itertuples() %}
-							{% if row.LIBELLÉ == modifyInfos.QUART_TRAVAIL %}
+							{% if row.LIBELLÉ == templateValue.QUART_TRAVAIL %}
 								<option value="{{row.ID}}" selected disabled>{{row.LIBELLÉ}}</option>
 							{% else %} 
 								<option value="{{row.ID}}">{{row.LIBELLÉ}}</option>
@@ -256,10 +256,10 @@
 		<div class="tab-pane fade" id="nav-remove" role="tabpanel" aria-labelledby="nav-remove-tab">
 	      <div class="bg-light p-3 row">
 	        <h2><i class="bi bi-dash-square"></i><span class="align-bottom"> | Retrait d'un rapport d'intervention</span></h2>
- 			<form id="form-remove-search" class="form col-lg-11 col-md-12 mx-auto" action="/remove" method="POST">
+ 			<form id="form-remove-search" class="form col-lg-11 col-md-12 mx-auto">
 				<div class="form-row">
 					<div class="form-group col-md-11">
-						<input type="text" class="form-control" id="remove_no_intervention" name="remove_no_intervention" placeholder="Inscrire le # du rapport d'intervention à supprimer"
+						<input type="text" class="form-control" id="remove_no_intervention" name="remove_no_intervention" placeholder="Inscrire le # du rapport d'intervention à supprimer" value="{{ templateValue.ID_INTERVENTION }}" 
 						>
 					</div>
 					<div class="form-group col-md-1">
@@ -271,26 +271,26 @@
 				<div class="form-row">
 					<div class="form-group col-md-3">
 						<label for="remove_pdq_nb"># Poste de quartier</label>
-						<input type="text" class="form-control" id="remove_pdq_nb" value="" disabled>
-						<input type="hidden" name="no_intervention_to_remove" value="0">
+						<input type="text" class="form-control" id="remove_pdq_nb" value="{{ templateValue.PDQ }}" disabled>
+						<input type="hidden" name="no_intervention_to_remove" value="{{ templateValue.ID_INTERVENTION }}">
 					</div>
 					<div class="form-group col-md-9">
 						<label for="remove_pdq_place">Emplacement</label>
-						<input type="text" class="form-control" id="remove_pdq_place" value="" disabled>
+						<input type="text" class="form-control" id="remove_pdq_place" value="{{ templateValue.EMPLACEMENT }}" disabled>
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="cat_intervention">Catégorie</label>
-						<input type="text" class="form-control" id="remove_cat_intervention" value="" disabled>
+						<input type="text" class="form-control" id="remove_cat_intervention" value="{{ templateValue.CATÉGORIE }}" disabled>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="remove_date_incident">Date d'incident</label>
-						<input type="date" class="form-control" id="remove_date_incident" value="" disabled>
+						<input type="date" class="form-control" id="remove_date_incident" value="{{ templateValue.DATE_INCIDENT }}" disabled>
 					</div>
 					<div class="form-group col-md-2">
 						<label for="remove_quart">Quart</label>
-						<input type="text" class="form-control" id="remove_quart" value="" disabled>
+						<input type="text" class="form-control" id="remove_quart" value="{{ templateValue.QUART_TRAVAIL }}" disabled>
 					</div>
 				</div>
 				<div class="form-row">
@@ -312,6 +312,28 @@
       </footer>
 
     </div>
+
+	{% if mode == 'valid_modify' %}
+	<script>
+		validInterventionNbToModify = true;
+		interventionToModify ={
+			4 : document.getElementById("modify_quart").value,
+			3 : document.getElementById("modify_pdq_nb").value,
+			2 : document.getElementById("modify_cat_intervention").value,
+			1 : document.getElementById("modify_date_incident").value
+		}
+
+		console.log("InterventionToModify :", interventionToModify);
+	</script>
+	{% endif %}
+
+
+	{% if mode == 'valid_remove' %}
+	<script>
+		validInterventionNbToRemove = true;
+	</script>
+	{% endif %}
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -320,9 +342,90 @@
 	<script src="./static/scripts/nav.js"></script>
 	<script src="./static/scripts/forms.js"></script>
 
-	{% block add %}{% endblock %}
-	
-	{% block modify_invalid %}{% endblock %}
+	<!-- In case of adding a new intervention -->
+	{% if mode == 'add' %}
+	<script>
+		console.log("Into the script")
+		window.addEventListener("load",  () => {
+			document.getElementById("popup-title").textContent = "Déclaration";
+			document.getElementById("popup-message").textContent =  "L'intervention #" + "{{ templateValue.ID_INTERVENTION }}" + " a été ajoutée avec succès";
+		
+			console.log("Pop-up window appears");
+		
+			$("#popup").modal();
+		
+			$("#popup").on("hidden.bs.modal", (e) => {
+				window.location.search = "";
+			})
+		})
+	</script>
+	{% endif %}
+
+	<!-- In case of modify with a wrong id -->
+	{% if mode == 'invalid_modify' %}
+	<script>
+		window.addEventListener("load",  () => {
+			document.getElementById("popup-title").textContent = "Erreur";
+			document.getElementById("popup-message").textContent =  "L'intervention #"+ "{{ templateValue.ID_INTERVENTION }}" + " n'existe pas.";
+		
+			$("#popup").modal();
+		
+			$("#popup").on("hidden.bs.modal", (e) => {
+				window.location.search = "";
+			})
+		})
+	</script>
+	{% endif %}
+
+	<!-- In case of modify after rewrite the data -->
+	{% if mode == "modify_done" %} 
+	<script>
+		window.addEventListener("load",  () => {
+			document.getElementById("popup-title").textContent = "Modification";
+			document.getElementById("popup-message").textContent =  "L'intervention #"+ "{{ templateValue.ID_INTERVENTION }}" + " a été modifiée avec succès.";
+		
+			$("#popup").modal();
+		
+			$("#popup").on("hidden.bs.modal", (e) => {
+				window.location.search = "";
+			})
+		})
+	</script>
+	{% endif %}
+
+	<!-- In case of remove with a wrong id -->
+	{% if mode == "invalid_remove" %}
+	<script>
+		window.addEventListener("load",  () => {
+			document.getElementById("popup-title").textContent = "Modification";
+			document.getElementById("popup-message").textContent =  "L'intervention #"+ "{{ templateValue.ID_INTERVENTION }}" + " à supprimer n'existe pas.";
+		
+			$("#popup").modal();
+		
+			$("#popup").on("hidden.bs.modal", (e) => {
+				window.location.search = "";
+			})
+		})
+	</script>
+	{% endif %}
+
+
+	<!-- In case of remove done -->
+	{% if mode == "remove_done" %}
+	<script>
+		window.addEventListener("load",  () => {
+			document.getElementById("popup-title").textContent = "Modification";
+			document.getElementById("popup-message").textContent =  "L'intervention #"+ "{{ templateValue.ID_INTERVENTION }}" + " a été retirée avec succès.";
+		
+			$("#popup").modal();
+		
+			$("#popup").on("hidden.bs.modal", (e) => {
+				window.location.search = "";
+			})
+		})
+	</script>
+	{% endif %}
+
 
   </body>
 </html>
