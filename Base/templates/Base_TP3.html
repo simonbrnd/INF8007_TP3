@@ -66,14 +66,14 @@
       <nav class="row mt-3">
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
-				<a class="nav-link active" id="nav-report-tab" data-toggle="tab" href="#nav-report" role="tab" aria-controls="nav-report" aria-selected="true"><i class="bi bi-card-text"></i> Rapport</a>
+				<a class="nav-link active" id="nav-report-tab" data-toggle="tab" href="/#nav-report" role="tab" aria-controls="nav-report" aria-selected="true"><i class="bi bi-card-text"></i> Rapport</a>
 			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-collection"></i> Intervention</a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" id="nav-add-tab" data-toggle="tab" href="#nav-add" role="tab" aria-controls="nav-add" aria-selected="true"><i class="bi bi-plus-square"></i> Déclaration</a>
-					<a class="dropdown-item" id="nav-modify-tab" data-toggle="tab" href="#nav-modify" role="tab" aria-controls="nav-modify" aria-selected="true"><i class="bi bi-toggle-off"></i> Mise-à-jour</a>
-					<a class="dropdown-item" id="nav-remove-tab" data-toggle="tab" href="#nav-remove" role="tab" aria-controls="nav-remove" aria-selected="true"><i class="bi bi-dash-square"></i> Retrait</a>
+					<a class="dropdown-item" id="nav-add-tab" data-toggle="tab" href="/#nav-add" role="tab" aria-controls="nav-add" aria-selected="true"><i class="bi bi-plus-square"></i> Déclaration</a>
+					<a class="dropdown-item" id="nav-modify-tab" data-toggle="tab" href="/#nav-modify" role="tab" aria-controls="nav-modify" aria-selected="true"><i class="bi bi-toggle-off"></i> Mise-à-jour</a>
+					<a class="dropdown-item" id="nav-remove-tab" data-toggle="tab" href="/#nav-remove" role="tab" aria-controls="nav-remove" aria-selected="true"><i class="bi bi-dash-square"></i> Retrait</a>
 				</div>
 				<li class="nav-item">
 					<a class="nav-link" id="nav-chart-tab" data-toggle="tab" href="#nav-chart" role="tab" aria-controls="nav-chart" aria-selected="true"><i class="bi bi-graph-up"></i> Visualisation</a>
@@ -109,7 +109,8 @@
 		<div class="tab-pane fade" id="nav-add" role="tabpanel" aria-labelledby="nav-add-tab">
 	      <div class="bg-light p-3 row">
 	        <h2><i class="bi bi-plus-square"></i><span class="align-bottom"> | Rapport de déclaration d'une intervention</span></h2>
-			<form id="form-add" class="form col-lg-11 col-md-12 mx-auto" action="/add" method="POST">
+
+			<form id="form-add" class="form col-lg-11 col-md-12 mx-auto">
 				<div class="form-row">
 					<div class="form-group col-md-3">
 						<label for="add_pdq_nb"># Poste de quartier</label>
@@ -147,7 +148,11 @@
 						<label for="add_quart">Quart</label>
 						<select class="form-control form-select" id="add_quart" name="add_quart">
 							{% for row in Quart.itertuples() %}
-			            	<option value="{{row.LIBELLÉ}}" >{{row.LIBELLÉ}}</option>
+								{% if row.LIBELLÉ == currentQuart %}
+			            			<option value="{{row.LIBELLÉ}}" selected>{{row.LIBELLÉ}}</option>
+								{% else %} 
+									<option value="{{row.LIBELLÉ}}">{{row.LIBELLÉ}}</option>
+								{% endif %}
 			            	{% endfor %}
 						</select>
 					</div>
@@ -158,6 +163,7 @@
 					</div>
 				</div>
 			</form>
+
 	      </div>
 		</div>
 		<div class="tab-pane fade" id="nav-modify" role="tabpanel" aria-labelledby="nav-modify-tab">
